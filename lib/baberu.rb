@@ -1,4 +1,6 @@
-require "baberu/version"
+# frozen_string_literal: true
+
+require 'baberu/version'
 
 module Baberu
   class Error < StandardError; end
