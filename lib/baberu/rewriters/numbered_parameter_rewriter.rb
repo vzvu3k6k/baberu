@@ -50,15 +50,8 @@ module Baberu
         "_np#{numparam.children.first}"
       end
 
-      def collect_numparams(node)
-        case node.type
-        when :begin
-          collect_numparams(node.children.first)
-        when :numblock, :block
-          _collect_numparams(node.children[2])
-        else
-          _collect_numparams(node)
-        end
+      def collect_numparams(numblock)
+        _collect_numparams(numblock.children[2])
       end
 
       def _collect_numparams(node, numparams = [])
