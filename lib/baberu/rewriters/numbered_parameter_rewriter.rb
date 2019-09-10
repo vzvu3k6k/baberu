@@ -11,6 +11,8 @@ module Baberu
         numparams.each do |numparam|
           rewrite_argument(numparam)
         end
+
+        super
       end
 
       private
@@ -49,11 +51,19 @@ module Baberu
       end
 
       def collect_numparams(node)
-        node.children.flat_map { |child| _collect_numparams(child) }
+        case node.type
+        when :begin
+          collect_numparams(node.children.first)
+        when :numblock, :block
+          _collect_numparams(node.children[2])
+        else
+          _collect_numparams(node)
+        end
       end
 
       def _collect_numparams(node, numparams = [])
-        return numparams if !node.respond_to?(:children) || node.type == :block || node.type == :numblock
+        return numparams unless node.respond_to?(:children)
+        return _collect_numparams(node.children[0]) if node.type == :block || node.type == :numblock
         return numparams.push(node) if node.type == :numparam
 
         node.children.flat_map { |child| _collect_numparams(child) }

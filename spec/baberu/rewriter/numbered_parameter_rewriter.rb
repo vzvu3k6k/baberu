@@ -16,18 +16,23 @@ RSpec.describe Baberu::Rewriters::NumberedParameterRewriter do
     it { expect(subject).to eq '[1, 2, 3].map {|_np1| _np1 * _np1 }' }
   end
 
+  context 'With a numbered param in a receiver called with a block' do
+    let(:source) { '[1].map { @1.tap { break @1 + 1 } }' }
+    it { expect(subject).to eq '[1].map {|_np1| _np1.tap {|_np1| break _np1 + 1 } }' }
+  end
+
   context 'With two arity block' do
-    let(:source) { '[].map { @1 * @2 }' }
-    it { expect(subject).to eq '[].map {|_np1, _np2| _np1 * _np2 }' }
+    let(:source) { '[[1, 2]].map { @1 * @2 }' }
+    it { expect(subject).to eq '[[1, 2]].map {|_np1, _np2| _np1 * _np2 }' }
   end
 
   context 'With three arity block with skipping' do
-    let(:source) { '[].map { @1 * @3 * @5 }' }
-    it { expect(subject).to eq '[].map {|_np1, _, _np3, _, _np5| _np1 * _np3 * _np5 }' }
+    let(:source) { '[[1, 2, 3, 4, 5]].map { @1 * @3 * @5 }' }
+    it { expect(subject).to eq '[[1, 2, 3, 4, 5]].map {|_np1, _, _np3, _, _np5| _np1 * _np3 * _np5 }' }
   end
 
   context 'With nested numbered parameter blocks' do
-    let(:source) { '[].map { @1.sum { @1 } }' }
-    it { expect(subject).to eq '[].map { |_np1_1| _np1_1.sum { _np2_1 } }'}
+    let(:source) { '[[1, 2]].map { [@2 + @1].map { @1 } }' }
+    it { expect(subject).to eq '[[1, 2]].map {|_np1, _np2| [_np2 + _np1].map {|_np1| _np1 } }' }
   end
 end
