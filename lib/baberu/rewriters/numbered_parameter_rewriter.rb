@@ -25,6 +25,7 @@ module Baberu
         insert_after(numblock.loc.begin, "|#{block_params(numparams).join(', ')}|")
       end
 
+      # [@1, @3, @6] => [@1, _, @3, _, _, @6]
       def block_params(numparams)
         return numparams.map(&:denominate) if numparams.size == 1
 
