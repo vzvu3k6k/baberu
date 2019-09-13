@@ -45,6 +45,7 @@ module Baberu
         replace(numparam.loc.expression, numparam.denominate)
       end
 
+      # collect numparam nodes in the current scope
       def collect_numparams(node, numparams = [])
         return numparams unless node.respond_to?(:children)
         return collect_numparams(node.children[0]) if node.type == :block || node.type == :numblock
