@@ -9,10 +9,10 @@ module Baberu
       def on_numblock(node)
         numparams = collect_numparams(node)
 
-        insert_arguments(node, numparams)
+        insert_block_params(node, numparams)
 
         numparams.each do |numparam|
-          rewrite_argument(numparam)
+          rewrite_params(numparam)
         end
 
         super
@@ -20,12 +20,12 @@ module Baberu
 
       private
 
-      def insert_arguments(numblock, numparams)
+      def insert_block_params(numblock, numparams)
         numparams = numparams.uniq(&:number).sort_by(&:number)
-        insert_after(numblock.loc.begin, "|#{parameters(numparams).join(', ')}|")
+        insert_after(numblock.loc.begin, "|#{block_params(numparams).join(', ')}|")
       end
 
-      def parameters(numparams)
+      def block_params(numparams)
         return numparams.map(&:denominate) if numparams.size == 1
 
         (numparams << nil)
@@ -40,7 +40,7 @@ module Baberu
           }
       end
 
-      def rewrite_argument(numparam)
+      def rewrite_params(numparam)
         replace(numparam.loc.expression, numparam.denominate)
       end
 
