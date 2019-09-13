@@ -1,8 +1,11 @@
 require 'parser'
+require 'baberu/rewriters/numbered_parameter_rewriter/numparam'
 
 module Baberu
   module Rewriters
     class NumberedParameterRewriter < Parser::TreeRewriter
+      using Numparam
+
       def on_numblock(node)
         numparams = collect_numparams(node)
 
@@ -18,36 +21,27 @@ module Baberu
       private
 
       def insert_arguments(numblock, numparams)
-        numparams =
-          numparams.uniq { |node| node.children.first }
-                   .sort_by { |node| node.children.first }
-
+        numparams = numparams.uniq(&:number).sort_by(&:number)
         insert_after(numblock.loc.begin, "|#{parameters(numparams).join(', ')}|")
       end
 
       def parameters(numparams)
-        if numparams.size == 1
-          [denominate(numparams.first)]
-        else
-          (numparams << nil)
-            .each_cons(2)
-            .flat_map { |a, b|
-              next [denominate(a)] if b.nil?
+        return numparams.map(&:denominate) if numparams.size == 1
 
-              [
-                denominate(a),
-                *(b.children.first - a.children.first - 1).times.map { '_' }
-              ]
-            }
-        end
+        (numparams << nil)
+          .each_cons(2)
+          .flat_map { |a, b|
+            next [a.denominate] if b.nil?
+
+            [
+              a.denominate,
+              *(b.number - a.number - 1).times.map { '_' }
+            ]
+          }
       end
 
       def rewrite_argument(numparam)
-        replace(numparam.loc.expression, denominate(numparam))
-      end
-
-      def denominate(numparam)
-        "_np#{numparam.children.first}"
+        replace(numparam.loc.expression, numparam.denominate)
       end
 
       def collect_numparams(numblock)
