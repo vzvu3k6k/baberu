@@ -7,7 +7,7 @@ module Baberu
       using Numparam
 
       def on_numblock(node)
-        numparams = collect_numparams(node)
+        numparams = collect_numparams(node.children[2])
 
         insert_block_params(node, numparams)
 
@@ -44,16 +44,12 @@ module Baberu
         replace(numparam.loc.expression, numparam.denominate)
       end
 
-      def collect_numparams(numblock)
-        _collect_numparams(numblock.children[2])
-      end
-
-      def _collect_numparams(node, numparams = [])
+      def collect_numparams(node, numparams = [])
         return numparams unless node.respond_to?(:children)
-        return _collect_numparams(node.children[0]) if node.type == :block || node.type == :numblock
+        return collect_numparams(node.children[0]) if node.type == :block || node.type == :numblock
         return numparams.push(node) if node.type == :numparam
 
-        node.children.flat_map { |child| _collect_numparams(child) }
+        node.children.flat_map { |child| collect_numparams(child) }
       end
     end
   end
