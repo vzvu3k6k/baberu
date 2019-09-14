@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'parser'
 require 'baberu/rewriters/numbered_parameter_rewriter/numparam'
 
