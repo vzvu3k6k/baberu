@@ -37,6 +37,12 @@ RSpec.describe Baberu::Rewriters::NumberedParameterRewriter do
     include_examples 'rewrite'
   end
 
+  context 'Without 1st numbered param' do
+    let(:source) { '[[1, 2]].map { @2 }' }
+    let(:expected_output) { '[[1, 2]].map {|_, _np2| _np2 }' }
+    include_examples 'rewrite'
+  end
+
   context 'With three arity block with skipping' do
     let(:source) { '[[1, 2, 3, 4, 5]].map { @1 * @3 * @5 }' }
     let(:expected_output) { '[[1, 2, 3, 4, 5]].map {|_np1, _, _np3, _, _np5| _np1 * _np3 * _np5 }' }

@@ -27,18 +27,16 @@ module Baberu
         insert_after(numblock.loc.begin, "|#{block_params(numparams).join(', ')}|")
       end
 
-      # [@1, @3, @6] => [@1, _, @3, _, _, @6]
+      # [@3, @6] => [_, _, @3, _, _, @6]
       def block_params(numparams)
-        return numparams.map(&:denominate) if numparams.size == 1
-
-        (numparams << nil)
+        [nil, *numparams]
           .each_cons(2)
           .flat_map { |a, b|
-            next [a.denominate] if b.nil?
+            blank_nums = (a.nil? ? b.number : b.number - a.number) - 1
 
             [
-              a.denominate,
-              *(b.number - a.number - 1).times.map { '_' }
+              *blank_nums.times.map { '_' },
+              b.denominate
             ]
           }
       end
