@@ -20,30 +20,21 @@ RSpec.describe Baberu::Source::TreeRewriter do
   }
   let(:rewriter) { described_class.new(source_buffer) }
 
-  describe '#insert_before' do
+  describe '#insert_before', :skip do
     let(:source) { 'foo' }
 
     it 'track changes' do
       rewriter.insert_before(range(0, 0), ':')
-      expect(rewriter.sourcemap).to be_nil
+      expect(rewriter.line_map).to eq [1]
     end
   end
 
-  describe '#wrap' do
+  describe '#wrap', :skip do
     let(:source) { 'foo' }
 
     it 'tracks changes' do
-      rewriter.wrap(range(0, 3), '"', '"') # rewrites to "foo"
-      expect(rewriter.sourcemap).to be_nil
+      rewriter.wrap(range(0, 3), '"', '"')
+      expect(rewriter.line_map).to eq [1]
     end
   end
-
-  # it 'tracks replace' do
-  #   source_buffer.source = 'foo'
-
-  #   rewriter.replace(range(0, 3), 'barbaz')
-  #   expect(rewriter.process).to eq 'barbaz'
-
-  #   expect(rewriter.sourcemap).to be_nil
-  # end
 end
