@@ -2,7 +2,7 @@
 
 require 'parser/ruby27'
 require 'parser/source/buffer'
-require 'baberu/rewriters/numbered_parameter_rewriter'
+require 'baberu/rewriter'
 
 module Baberu
   module Loader
@@ -15,10 +15,8 @@ module Baberu
       buffer = Parser::Source::Buffer.new(path)
       buffer.source = code
 
-      rewriter = Baberu::Rewriters::NumberedParameterRewriter.new
-      compiled_code = rewriter.rewrite(buffer, ast)
-      line_map = rewriter.line_map(buffer, ast)
-      
+      compiled_code, line_map = Baberu::Rewriter.rewrite_with_line_map(buffer, ast)
+
       begin
         eval compiled_code, nil, path
       rescue => e
