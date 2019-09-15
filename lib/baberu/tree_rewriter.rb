@@ -10,7 +10,7 @@ module Baberu
     end
 
     def line_map
-      lines = 1.upto(buffer.source_lines.size).to_a
+      lines = 1.upto(source_buffer.source_lines.size).to_a
 
       @actions.sort_by(&:range).each do |action|
         original_line = action.range.line
@@ -28,13 +28,15 @@ module Baberu
           lines[index, newlines] = []
         end
       end
+
+      lines
     end
 
-    class Action < Struct.new(:type, :range, :content_size)
+    class Action < Struct.new(:type, :range, :content)
     end
 
     def replace(range, content)
-      @actions << Action.new(:replace, range, content.size)
+      @actions << Action.new(:replace, range, content)
     end
 
     def wrap(range, insert_before, insert_after)
@@ -47,11 +49,11 @@ module Baberu
     end
 
     def insert_before(range, content)
-      @actions << Action.new(:insert_before, range, content.size)
+      @actions << Action.new(:insert_before, range, content)
     end
 
     def insert_after(range, content)
-      @actions << Action.new(:insert_after, range, content.size)
+      @actions << Action.new(:insert_after, range, content)
     end
   end
 end

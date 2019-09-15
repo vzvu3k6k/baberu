@@ -15,6 +15,7 @@ module Baberu
         process(ast)
 
         @source_rewriter.process
+        @source_rewriter.line_map
       end
 
       def on_numblock(node)
