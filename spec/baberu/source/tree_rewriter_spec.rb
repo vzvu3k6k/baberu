@@ -23,7 +23,7 @@ RSpec.describe Baberu::Source::TreeRewriter do
   describe '#insert_before' do
     let(:source) { 'foo' }
 
-    fit 'track changes' do
+    it 'track changes' do
       rewriter.insert_before(range(0, 0), ':')
       expect(rewriter.sourcemap).to be_nil
     end
