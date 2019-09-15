@@ -14,7 +14,7 @@ RSpec.describe Baberu::Rewriters::NumberedParameterRewriter do
       expect(actual_output).to eq expected_output
     end
 
-    specify 'source and expected_output have the same result' do
+    specify 'source and expected_output have the same result', :skip do
       expect(eval(source)).to eq eval(expected_output)
     end
   end
