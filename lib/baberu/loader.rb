@@ -16,7 +16,18 @@ module Baberu
       buffer.source = code
 
       rewriter = Baberu::Rewriters::NumberedParameterRewriter.new
-      eval rewriter.rewrite(buffer, ast)
+      compiled_code = rewriter.rewrite(buffer, ast)
+      line_map = rewriter.line_map(buffer, ast)
+
+      begin
+        eval compiled_code
+      rescue => e
+        raise rewrite_exception(e, line_map)
+      end
+    end
+
+    def rewrite_exception(e, line_map)
+      e
     end
   end
 end

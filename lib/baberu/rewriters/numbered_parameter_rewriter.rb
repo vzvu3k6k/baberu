@@ -2,11 +2,20 @@
 
 require 'parser'
 require 'baberu/rewriters/numbered_parameter_rewriter/numparam'
+require 'baberu/tree_rewriter'
 
 module Baberu
   module Rewriters
     class NumberedParameterRewriter < Parser::TreeRewriter
       # using Numparam
+
+      def line_map(source_buffer, ast, **policy)
+        @source_rewriter = Baberu::TreeRewriter.new(source_buffer, **policy)
+
+        process(ast)
+
+        @source_rewriter.process
+      end
 
       def on_numblock(node)
         numparams = collect_numparams(node.children[2])
