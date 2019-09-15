@@ -6,7 +6,7 @@ require 'baberu/rewriters/numbered_parameter_rewriter/numparam'
 module Baberu
   module Rewriters
     class NumberedParameterRewriter < Parser::TreeRewriter
-      using Numparam
+      # using Numparam
 
       def on_numblock(node)
         numparams = collect_numparams(node.children[2])
