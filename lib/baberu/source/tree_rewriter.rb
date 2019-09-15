@@ -4,6 +4,7 @@ require 'parser'
 
 module Baberu
   module Source
+    # TODO: Make sure this works fine
     class TreeRewriter < Parser::Source::TreeRewriter
       def initialize(*)
         @actions = []
