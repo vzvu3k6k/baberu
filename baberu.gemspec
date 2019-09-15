@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['vzvu3k6k@gmail.com']
 
   spec.summary       = 'Babel for Ruby'
-  spec.description   = 'Compiles Ruby code for older Ruby implementations'
+  spec.description   = 'Compiles Ruby code for older Rubies'
   spec.homepage      = 'https://github.com/vzvu3k6k/baberu'
 
   spec.metadata['homepage_uri'] = spec.homepage
