@@ -2,7 +2,7 @@
 
 require 'parser'
 require 'baberu/rewriters/numbered_parameter_rewriter/numparam'
-require 'baberu/tree_rewriter'
+require 'baberu/source/tree_rewriter'
 
 module Baberu
   module Rewriters
@@ -10,7 +10,7 @@ module Baberu
       # using Numparam
 
       def line_map(source_buffer, ast, **policy)
-        @source_rewriter = Baberu::TreeRewriter.new(source_buffer, **policy)
+        @source_rewriter = Baberu::Source::TreeRewriter.new(source_buffer, **policy)
 
         process(ast)
 

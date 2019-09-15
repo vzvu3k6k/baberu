@@ -2,9 +2,9 @@
 
 require 'parser/source/buffer'
 require 'parser/source/range'
-require 'baberu/tree_rewriter'
+require 'baberu/source/tree_rewriter'
 
-RSpec.describe Baberu::TreeRewriter do
+RSpec.describe Baberu::Source::TreeRewriter do
   def range(begin_pos, end_pos)
     Parser::Source::Range.new(source_buffer, begin_pos, end_pos)
   end

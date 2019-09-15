@@ -5,21 +5,56 @@ require 'parser'
 module Baberu
   module Source
     class TreeRewriter < Parser::Source::TreeRewriter
-      # Based on Parser::Source::TreeRewriter#process
-      def sourcemap
-        adjustment = 0
-        maps = []
+      def initialize(*)
+        @actions = []
+        super
+      end
 
-        @action_root.ordered_replacements.each do |range, replacement|
-          begin_pos = range.begin_pos + adjustment
-          end_pos   = begin_pos + replacement.size
+      def line_map
+        lines = 1.upto(source_buffer.source_lines.size).to_a
 
-          maps << [range, (begin_pos...end_pos)]
+        @actions.sort_by(&:range).each do |action|
+          original_line = action.range.line
 
-          adjustment += replacement.length - range.length
+          # OPTIMIZE: use bisect
+          index = lines.find_index { |line| line == original_line }
+          raise 'index is not found' unless index
+
+          case action.type
+          when :insert_before, :insert_after, :replace
+            newlines = action.content.count("\n")
+            lines[index, 0] = newlines.times.map { index }
+          when :remove
+            newlines = action.range.source.count("\n")
+            lines[index, newlines] = []
+          end
         end
 
-        maps
+        lines
+      end
+
+      class Action < Struct.new(:type, :range, :content)
+      end
+
+      def replace(range, content)
+        @actions << Action.new(:replace, range, content)
+      end
+
+      def wrap(range, insert_before, insert_after)
+        insert_before(range, insert_before)
+        insert_after(range, insert_after)
+      end
+
+      def remove(range)
+        @actions << Action.new(:remove, range)
+      end
+
+      def insert_before(range, content)
+        @actions << Action.new(:insert_before, range, content)
+      end
+
+      def insert_after(range, content)
+        @actions << Action.new(:insert_after, range, content)
       end
     end
   end
