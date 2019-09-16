@@ -20,7 +20,7 @@ module Baberu
 
       CoreExt::Exception.apply
 
-      Exception.register_mapping(path, line_map)
+      Exception.set_backtrace_mapping(path, line_map)
       eval compiled_code, nil, path
     end
   end
