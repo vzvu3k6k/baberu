@@ -19,8 +19,8 @@ module Baberu
       compiled_code, line_map = Baberu::Rewriter.rewrite_with_line_map(buffer, ast)
 
       CoreExt::Exception.apply
-
       Exception.set_backtrace_mapping(path, line_map)
+
       eval compiled_code, nil, path
     end
   end
