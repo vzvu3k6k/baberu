@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require 'baberu/loader'
+
+abort 'Specify a source file.' unless ARGV[0]
+Baberu::Loader.load(ARGV[0])
