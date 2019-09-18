@@ -14,7 +14,7 @@ module Baberu
       end
 
       module Extend
-        def set_backtrace_mapping(path, line_map)
+        def add_backtrace_mapping(path, line_map)
           unless ::Exception.class_variable_defined?(:@@baberu_mapping)
             ::Exception.class_variable_set(:@@baberu_mapping, {})
           end
