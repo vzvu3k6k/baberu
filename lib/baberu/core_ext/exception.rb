@@ -6,6 +6,9 @@ module Baberu
       module_function
 
       def apply(target = ::Exception)
+        # Don't extend or prepend twice to avoid conflict with other patches.
+        # Module#extended (Module#included) will be invoked
+        # even if the module has already been extended (prepended).
         return if @applied
 
         @applied = true
