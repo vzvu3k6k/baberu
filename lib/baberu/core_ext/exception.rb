@@ -5,12 +5,12 @@ module Baberu
     module Exception
       module_function
 
-      def apply
+      def apply(target = ::Exception)
         return if @applied
 
         @applied = true
-        ::Exception.extend(Extend)
-        ::Exception.prepend(Prepend)
+        target.extend(Extend)
+        target.prepend(Prepend)
       end
 
       module Extend
