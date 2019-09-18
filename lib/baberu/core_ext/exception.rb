@@ -37,6 +37,7 @@ module Baberu
           locations.map { |l|
             next l.to_s unless mapping.key?(l.path)
 
+            # TODO: Use a more robust way
             l.to_s.sub(/^([^:]+):(\d+):/) { "#{$1}:#{mapping[l.path][$2.to_i]}:" }
           }.join("\n")
         end
